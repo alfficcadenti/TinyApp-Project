@@ -17,8 +17,6 @@ function generateRandomString() {
   var id = Math.random().toString(36).substr(5);
   return id;
 }
-console.log(generateRandomString());
-
 
 
 app.get("/", (req, res) => {
@@ -40,8 +38,18 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body)
-  res.send("ok");
+  //console.log(req.body.longURL)
+  var newId = generateRandomString();
+  urlDatabase.newId = req.body.longURL;
+  let newLink = "/urls/" + newId;
+  let templateVars = { shortURL: newId, longURL: req.body.longURL};
+  res.render("urls_show", templateVars);
+
+  //return res.redirect(urlDatabase.newId); //return to the liunk
+
+  //let templateVars = { urls: urlDatabase };
+  //res.render("urls_index", templateVars);
+
 });
 
 app.get("/urls/:id", (req, res) => {
