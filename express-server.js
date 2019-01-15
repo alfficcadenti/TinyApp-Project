@@ -13,6 +13,13 @@ var urlDatabase = {
 app.set("view engine", "ejs")
 
 
+function generateRandomString() {
+  var id = Math.random().toString(36).substr(5);
+  return id;
+}
+console.log(generateRandomString());
+
+
 
 app.get("/", (req, res) => {
   res.send("Hello!");
