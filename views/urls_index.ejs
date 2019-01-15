@@ -8,5 +8,12 @@
     <% include ./partials/_header %>
   </header>
 
+  <ul>
+    <% for(key in urls) { %>
+        <li><%= urls[key] %> </li>
+    <% }; %>
+  </ul>
+
+
 </body>
 </html>
