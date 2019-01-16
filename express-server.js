@@ -41,7 +41,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[newId] = req.body.longURL;
   let newLink = "/urls/" + newId;
   let templateVars = { shortURL: newId, longURL: req.body.longURL};
-  res.render("urls_show", templateVars);
+  res.redirect(newLink);
 
 });
 
