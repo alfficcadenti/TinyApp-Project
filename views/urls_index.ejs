@@ -10,13 +10,19 @@
 
   <ul>
     <% for(key in urls) { %>
-        <li><%= key %> - <%= urls[key] %></li>
+        <li>
+          <%= key %> - <%= urls[key] %>
+          <form method="POST" action="/urls/<%= key %>/delete">
+            <input type="submit" value="Delete">
+          </form>
+        </li>
     <% }; %>
+
   </ul>
 
 <a href='/urls/new'>add new URL</a>
 
-<form method="POST" action="/urls/9sm5xK/delete">...</form>
+
 
 
 </body>
