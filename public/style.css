@@ -1,0 +1,37 @@
+body {
+  font-size:20px;
+  /*color: #444;*/
+}
+
+table {
+  padding:20px;
+}
+
+td {
+  padding:20px;
+}
+
+input {
+  font-size:20px;
+}
+
+#wrapper {
+    width: 150px;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+#user-login {
+    width: 100px;
+    float:left;
+}
+
+#login-button {
+    overflow: hidden;
+}
+
+.topcorner {
+  position:absolute;
+  top:0;
+  right:0;
+}
