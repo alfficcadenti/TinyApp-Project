@@ -14,7 +14,7 @@ app.set("view engine", "ejs")
 
 
 function generateRandomString() {
-  var id = Math.random().toString(36).substr(5);
+  let id = Math.random().toString(36).substr(5);
   return id;
 }
 
@@ -37,9 +37,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  //console.log(req.body.longURL)
   let newId = generateRandomString();
-  urlDatabase.newId = req.body.longURL;
+  urlDatabase[newId] = req.body.longURL;
   let newLink = "/urls/" + newId;
   let templateVars = { shortURL: newId, longURL: req.body.longURL};
   res.render("urls_show", templateVars);
@@ -56,7 +55,6 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  console.log(req.params.shortURL)
   if (urlDatabase[req.params.shortURL] === undefined) {
     res.status(404).send('Not Found!')
   }

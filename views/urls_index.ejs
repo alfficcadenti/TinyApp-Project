@@ -10,10 +10,11 @@
 
   <ul>
     <% for(key in urls) { %>
-        <li><%= urls[key] %> </li>
+        <li><%= key %> - <%= urls[key] %></li>
     <% }; %>
   </ul>
 
+<a href='/urls/new'>add new URL</a>
 
 </body>
 </html>
