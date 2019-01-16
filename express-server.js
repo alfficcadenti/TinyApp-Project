@@ -17,19 +17,29 @@ var urlDatabase = {
 app.set("view engine", "ejs")
 
 
+//Generic Utils Functions
 function generateRandomString() {
   let id = Math.random().toString(36).substr(5);
   return id;
 }
 
+//GET Requests
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+
 
 app.get("/hello", (req, res) => {
   let templateVars = { greeting: 'Hello World!' };
   res.render("hello_world", templateVars);
 });
+
+
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+
 
 app.get("/urls", (req, res) => {
   let templateVars = {
@@ -39,12 +49,14 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+
 app.get("/urls/new", (req, res) => {
   let templateVars = {
     username: req.cookies["username"]
  };
   res.render("urls_new",templateVars);
 });
+
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
@@ -54,9 +66,6 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
 
 app.get("/u/:shortURL", (req, res) => {
   if (urlDatabase[req.params.shortURL] === undefined) {
@@ -68,6 +77,9 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
+
+//POST Requests
+
 app.post("/login", (req, res) => {
   let username = req.body.username;
   // set the cookie name username
@@ -76,12 +88,14 @@ app.post("/login", (req, res) => {
   res.redirect(link);
 });
 
+
 app.post("/logout", (req, res) => {
   // clear the cookie name username
   res.clearCookie("username");
   let link = "/urls";
   res.redirect(link);
 });
+
 
 app.post("/urls", (req, res) => {
   let newId = generateRandomString();
@@ -90,6 +104,7 @@ app.post("/urls", (req, res) => {
   let templateVars = { shortURL: newId, longURL: req.body.longURL};
   res.redirect(newLink);
 });
+
 
 app.post("/urls/:id/delete", (req, res) => {
   let shortUrl = req.params.id;
@@ -105,6 +120,7 @@ app.post("/urls/:id/update", (req, res) => {
   urlDatabase[shortURL] = longURL;
   res.redirect(link);
 });
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

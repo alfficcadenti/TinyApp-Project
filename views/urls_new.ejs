@@ -1,7 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head></head>
-  <body style="font-size:20px; padding:50px;">
+  <head>
+    <title>TinyApp</title>
+    <style>
+      <style>
+        body {
+          font-size:20px;
+          /*color: #444;*/
+        }
+        table {
+          padding:20px;
+        }
+
+        td {
+          padding:20px;
+        }
+
+        input {
+          font-size:20px;
+        }
+        div[name=logout-button] {
+          float:right;
+          font-size:50px;
+        }
+        div[name=div-username] {
+          float:right;
+          font-size:50px;
+        }
+
+        .topcorner {
+          position:absolute;
+          top:0;
+          right:0;
+        }
+    </style>
+  </head>
+  <body>
     <% include partials/_header %>
     <form action="/urls" method="POST" style="margin:150px;">
       <label for="longURL">Enter a URL:</label>
