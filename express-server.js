@@ -55,6 +55,14 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
+app.post("/login", (req, res) => {
+  // set cookie name username
+  let username = req.body.username;
+  res.cookie("username", username)
+  let link = "/urls"
+  res.redirect(link);
+});
+
 app.post("/urls", (req, res) => {
   let newId = generateRandomString();
   urlDatabase[newId] = req.body.longURL;
