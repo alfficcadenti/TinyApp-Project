@@ -1,9 +1,13 @@
 var express = require("express");
+var cookieParser = require('cookie-parser')
 var app = express();
+
 var PORT = 8080; // default port 8080
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser())
+
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -36,7 +40,10 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let templateVars = {
+    username: req.cookies["username"]
+ };
+  res.render("urls_new",templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -65,6 +72,13 @@ app.post("/login", (req, res) => {
   let username = req.body.username;
   // set the cookie name username
   res.cookie("username", username);
+  let link = "/urls";
+  res.redirect(link);
+});
+
+app.post("/logout", (req, res) => {
+  // clear the cookie name username
+  res.clearCookie("username");
   let link = "/urls";
   res.redirect(link);
 });
