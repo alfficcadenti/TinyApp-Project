@@ -216,9 +216,17 @@ app.post("/urls", (req, res) => {
 
 
 app.post("/urls/:id/delete", (req, res) => {
-  let shortUrl = req.params.id;
-  delete urlDatabase[shortUrl];
+
+  let shortURL = req.params.id;
+  //only URL owner can update
+  console.log(req.cookies["user_id"].id,urlDatabase[shortURL].userId)
+  if (req.cookies["user_id"].id != urlDatabase[shortURL].userId) {
+    res.status(400).send('you are not the URL owner!')
+  }
+  else {
+    delete urlDatabase[shortURL];
   res.redirect("/urls");
+  }
 });
 
 
@@ -227,6 +235,8 @@ app.post("/urls/:id/update", (req, res) => {
   let link = "/urls/"+shortURL;
   let longURL = req.body.longURL;
   let userObj = req.cookies["user_id"]
+  //only URL owner can update
+  // if () {}
   urlDatabase[shortURL] = {
     id: shortURL,
     longURL: longURL,
