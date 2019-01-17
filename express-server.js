@@ -226,7 +226,12 @@ app.post("/urls/:id/update", (req, res) => {
   let shortURL = req.params.id;
   let link = "/urls/"+shortURL;
   let longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  let userObj = req.cookies["user_id"]
+  urlDatabase[shortURL] = {
+    id: shortURL,
+    longURL: longURL,
+    userId: userObj.id
+  }
   res.redirect(link);
 });
 
