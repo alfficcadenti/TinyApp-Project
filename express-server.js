@@ -118,6 +118,27 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+  //Registration Error Handling
+  //Empty input => error
+  if (req.body.email == '' || req.body.email == '') {
+    res.status(400).send('email or password is empty!')
+  }
+  // email already exists in DB
+  /*else if (req.body.email != '') {
+    for (let k in users) {
+    if (users[k].email === "user2@example.com") {
+        console.log('has test1'); //return true;
+      }
+    }*/
+
+
+
+
+
+
+  //END of ERROR HANDLer
+
+
   //generate random id
   let userId = generateRandomString();
   // generate the object for the user to append to userDB
@@ -130,11 +151,10 @@ app.post("/register", (req, res) => {
   users[userId] = user;
   //set cookie user_id
   res.cookie("userId", userId);
+  //redirect
   let link = "/urls";
   res.redirect(link);
-  // redirect to /urls
-  //let link = "/urls";
-  //res.redirect(link);
+
 });
 
 app.post("/urls", (req, res) => {
