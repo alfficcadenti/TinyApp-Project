@@ -72,7 +72,6 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    urls: urlDatabase,
     user_id: req.cookies["user_id"]
  };
   res.render("login", templateVars);
@@ -96,8 +95,15 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   let templateVars = {
     user_id: req.cookies["user_id"]
- };
-  res.render("urls_new",templateVars);
+  };
+  //if not logged in return to login page
+  if (req.cookies["user_id"] === undefined) {
+    res.redirect("/login");
+  }
+  else {
+    res.render("urls_new",templateVars);
+  }
+
 });
 
 
