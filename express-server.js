@@ -16,7 +16,7 @@ const urlDatabase = {
     id : "b2xVn2",
     longURL: "http://www.lighthouselabs.ca",
     userId: 123123
-  }
+  },
   "9sm5xK": {
     id : "9sm5xK",
     longURL: "http://www.google.com",
@@ -202,7 +202,13 @@ app.post("/register", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let newId = generateRandomString();
-  urlDatabase[newId] = req.body.longURL;
+  let userObj = req.cookies["user_id"]
+  urlDatabase[newId] = {
+    id: newId,
+    longURL: req.body.longURL,
+    userId: userObj.id
+  }
+  //console.log(urlDatabase[newId])
   let newLink = "/urls/" + newId;
   let templateVars = { shortURL: newId, longURL: req.body.longURL};
   res.redirect(newLink);

@@ -5,7 +5,7 @@
     <% for(key in urls) { %>
         <tr>
           <td>
-            <em><%= key %> &rarr; <%= urls[key] %></em>
+            <em><%= key %> &rarr; <%= urls[key].longURL %></em>
           </td>
           <td>
             <a href='/urls/<%= key %>'>Edit URL</a>
