@@ -4,7 +4,7 @@
     <h2>Login</h2>
     <div id="wrapper" class="topcorner">
       <div id="user-login">
-      <%if (user_id == undefined) { %>
+      <%if (!user_id) { %>
         <form action="/login" method="POST">
           <label for="email">email address:</label>
           <input type="email" name="email" placeholder="email address">
@@ -14,9 +14,9 @@
           <br>
           <input type="submit" value="Login">
         </form>
-          <div name="div-username">
+          <div name="div-email">
       <% } else {  %>
-          user_id: <%= user_id.email  %>
+          Email: <%= user_id.email  %>
         </div>
         <div id="logout-button">
           <form action="/logout" method="POST">

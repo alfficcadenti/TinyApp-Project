@@ -1,7 +1,17 @@
-<body>
-  <header title="header">
-      <h1>TinyApp</h1>
-  </header>
-    <a href='/register'>Register New User</a>
 
-    <a href='/login'>Login</a>
+
+  <div id="wrapper" class="topcorner">
+      <%if (user_id) { %>
+        Email: <%= user_id.email  %>
+        </div>
+        <div id="logout-button">
+          <form action="/logout" method="POST">
+            <input type="submit" value="Logout">
+          </form>
+        </div>
+      <% } else {  %>
+        <a href='/login'>Login</a>
+
+        <a href='/register'>Register New User</a>
+      <% } %>
+  </div>

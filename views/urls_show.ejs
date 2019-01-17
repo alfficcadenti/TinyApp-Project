@@ -1,8 +1,6 @@
 <% include ./partials/_headtag %>
-<body>
-  <header>
-    <% include ./partials/_header %>
-  </header>
+<% include ./partials/_header %>
+
 
   <form action="/urls/<%= shortURL %>/update" method="POST" style="margin:150px;">
       <h3>Short URL:  <%= shortURL %> </h3>

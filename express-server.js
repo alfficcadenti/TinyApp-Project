@@ -24,8 +24,8 @@ const users = {
   },
  "123456": {
     id: "123456",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
+    email: "alf@gmail.com",
+    password: "a"
   }
 }
 
@@ -45,15 +45,11 @@ function generateRandomString() {
 //userDBLookup
 function userLookup(email) {
   for (let k in users) {
-    if (users[k].email === email) {
+    if (users[k].email == email) {
       return users[k];
-      }
-    else {
-      return false;
     }
   };
 };
-
 
 
 //GET Requests
@@ -128,11 +124,11 @@ app.get("/u/:shortURL", (req, res) => {
 //POST Requests
 
 app.post("/login", (req, res) => {
-  let emailInput = req.body.email;
-  let passwordInput = req.body.password;
+  var emailInput = req.body.email;
+  var passwordInput = req.body.password;
   //check user exist
   var user = userLookup(emailInput)
-
+  //console.log(user)
   if (!user) {
     res.status(403).send('Email Not Found!')
   }
@@ -152,7 +148,7 @@ app.post("/login", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  // clear the cookie name username
+  // clear the cookie name email
   res.clearCookie("user_id");
   let link = "/urls";
   res.redirect(link);
@@ -170,20 +166,20 @@ app.post("/register", (req, res) => {
     if (users[k].email === req.body.email) {
       res.status(400).send('Email already used')
       }
-    };
+    }
 
     //generate random id
     let userId = generateRandomString();
     // generate the object for the user to append to userDB
     let user = {
-      id: userId,
-      email: req.body.email,
-      password: req.body.password
+    id: userId,
+    email: req.body.email,
+    password: req.body.password
     }
     //update userDB appending the new user
     users[userId] = user;
     //set cookie user_id
-    res.cookie("userId", user);
+    res.cookie("user_id", user);
     //redirect
     let link = "/urls";
     res.redirect(link);
