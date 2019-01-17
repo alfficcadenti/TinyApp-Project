@@ -11,7 +11,7 @@ app.use(cookieParser())
 app.use(express.static(__dirname + '/public'));
 
 
-var urlDatabase = {
+const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
@@ -44,7 +44,14 @@ function generateRandomString() {
 
 //userDBLookup
 function userLookup(email) {
-
+  for (let k in users) {
+    if (users[k].email === email) {
+      return users[k];
+      }
+    else {
+      return false;
+    }
+  };
 };
 
 
@@ -121,19 +128,32 @@ app.get("/u/:shortURL", (req, res) => {
 //POST Requests
 
 app.post("/login", (req, res) => {
-  let email = req.body.email;
-  let password = req.body.password;
+  let emailInput = req.body.email;
+  let passwordInput = req.body.password;
+  //check user exist
+  var user = userLookup(emailInput)
 
-  // set the cookie name username
-  res.cookie("user_id", user);
-  let link = "/urls";
-  res.redirect(link);
+  if (!user) {
+    res.status(403).send('Email Not Found!')
+  }
+  else {
+    //check password is correct
+    if (user.password != passwordInput) {
+      res.status(403).send('Password Incorrect!')
+    }
+    else {
+      // set the cookie user_id
+      res.cookie("user_id", user);
+      let link = "/";
+      res.redirect(link);
+    }
+  }
 });
 
 
 app.post("/logout", (req, res) => {
   // clear the cookie name username
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   let link = "/urls";
   res.redirect(link);
 });
