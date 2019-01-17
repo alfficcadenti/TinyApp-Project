@@ -3,7 +3,7 @@
     <h2>Login</h2>
     <div id="wrapper" class="topcorner">
       <div id="user-login">
-      <%console.log(user_id); if (user_id === undefined) { %>
+      <% if (user_id === undefined) { %>
         <form action="/login" method="POST">
           <label for="email">email address:</label>
           <input type="email" name="email" placeholder="email address">
