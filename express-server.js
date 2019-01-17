@@ -7,6 +7,7 @@ var PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser())
+app.use(express.static(__dirname + '/public'));
 
 
 var urlDatabase = {
@@ -23,7 +24,9 @@ function generateRandomString() {
   return id;
 }
 
+
 //GET Requests
+
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -33,6 +36,11 @@ app.get("/", (req, res) => {
 app.get("/hello", (req, res) => {
   let templateVars = { greeting: 'Hello World!' };
   res.render("hello_world", templateVars);
+});
+
+app.get("/register", (req, res) => {
+  let templateVars = { greeting: 'Register here:' };
+  res.render("register", templateVars);
 });
 
 
@@ -96,6 +104,14 @@ app.post("/logout", (req, res) => {
   res.redirect(link);
 });
 
+app.post("/register", (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+  // set the cookie name username
+  //res.cookie("email", email);
+  let link = "/urls";
+  res.redirect(link);
+});
 
 app.post("/urls", (req, res) => {
   let newId = generateRandomString();

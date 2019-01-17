@@ -1,42 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TinyApp</title>
-  <style>
-    body {
-      font-size:20px;
-      /*color: #444;*/
-    }
-    table {
-      padding:20px;
-    }
-
-    td {
-      padding:20px;
-    }
-
-    input {
-      font-size:20px;
-    }
-
-    div[name=logout-button] {
-      float:right;
-      font-size:50px;
-    }
-
-    div[name=div-username] {
-      float:right;
-      font-size:50px;
-    }
-
-    .topcorner {
-      position:absolute;
-      top:0;
-      right:0;
-    }
-
-  </style>
-</head>
+<% include ./partials/_headtag %>
 <body>
   <header>
     <% include ./partials/_header %>
@@ -48,20 +10,19 @@
           <td>
             <em><%= key %> &rarr; <%= urls[key] %></em>
           </td>
-          <td padding="10px">
+          <td>
             <a href='/urls/<%= key %>'>Edit URL</a>
           </td>
-          <td padding="10px">
+          <td>
             <form method="POST" action="/urls/<%= key %>/delete">
               <input type="submit" value="Delete">
             </form>
           </td>
         </tr>
     <% }; %>
-
   </table>
 
-<a href='/urls/new'>add new URL</a>
+  <a href='/urls/new'>add new URL</a>
 
 
 
