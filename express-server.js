@@ -16,13 +16,13 @@ var urlDatabase = {
 };
 
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
+  "123123": {
+    id: "123123",
     email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
- "user2RandomID": {
-    id: "user2RandomID",
+ "123456": {
+    id: "123456",
     email: "user2@example.com",
     password: "dishwasher-funk"
   }
@@ -118,12 +118,23 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let email = req.body.email;
-  let password = req.body.password;
-  // set the cookie name username
-  //res.cookie("email", email);
+  //generate random id
+  let userId = generateRandomString();
+  // generate the object for the user to append to userDB
+  let user = {
+    id: userId,
+    email: req.body.email,
+    password: req.body.password
+  }
+  //update userDB appending the new user
+  users[userId] = user;
+  //set cookie user_id
+  res.cookie("userId", userId);
   let link = "/urls";
   res.redirect(link);
+  // redirect to /urls
+  //let link = "/urls";
+  //res.redirect(link);
 });
 
 app.post("/urls", (req, res) => {
