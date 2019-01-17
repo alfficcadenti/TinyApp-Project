@@ -1,25 +1,4 @@
+<body>
 <header title="header">
     <h1>TinyApp</h1>
-    <div id="wrapper" class="topcorner">
-      <div id="user-login">
-      <%if (username == undefined) { %>
-        <form action="/login" method="POST">
-          <input type="text" name="username" value="<%=  %>" placeholder="Username">
-          <input type="submit" value="Login">
-        </form>
-          <div name="div-username">
-      <% } else {  %>
-          Username: <%= username  %>
-        </div>
-        <div id="logout-button">
-          <form action="/logout" method="POST">
-            <input type="submit" value="Logout">
-          </form>
-        </div>
-      <% } %>
-    </div>
-
-    </div>
-
-
 </header>

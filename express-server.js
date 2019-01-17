@@ -1,10 +1,11 @@
 var express = require("express");
 var cookieParser = require('cookie-parser')
+const bodyParser = require("body-parser");
+
 var app = express();
 
 var PORT = 8080; // default port 8080
 
-const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser())
 app.use(express.static(__dirname + '/public'));
@@ -31,11 +32,21 @@ const users = {
 app.set("view engine", "ejs")
 
 
-//Generic Utils Functions
+
+//////Generic Utils Functions
+//---------------------------
+
+//generate random id
 function generateRandomString() {
   let id = Math.random().toString(36).substr(5);
   return id;
-}
+};
+
+//userDBLookup
+function userLookup(email) {
+
+};
+
 
 
 //GET Requests
@@ -56,6 +67,14 @@ app.get("/register", (req, res) => {
   res.render("register", templateVars);
 });
 
+app.get("/login", (req, res) => {
+  let templateVars = {
+    urls: urlDatabase,
+    user_id: req.cookies["user_id"]
+ };
+  res.render("login", templateVars);
+});
+
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -65,7 +84,7 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user_id: req.cookies["user_id"]
  };
   res.render("urls_index", templateVars);
 });
@@ -73,7 +92,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    username: req.cookies["username"]
+    user_id: req.cookies["user_id"]
  };
   res.render("urls_new",templateVars);
 });
@@ -83,7 +102,7 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
-    username: req.cookies["username"]};
+    user_id: req.cookies["user_id"]};
   res.render("urls_show", templateVars);
 });
 
@@ -102,9 +121,11 @@ app.get("/u/:shortURL", (req, res) => {
 //POST Requests
 
 app.post("/login", (req, res) => {
-  let username = req.body.username;
+  let email = req.body.email;
+  let password = req.body.password;
+
   // set the cookie name username
-  res.cookie("username", username);
+  res.cookie("user_id", user);
   let link = "/urls";
   res.redirect(link);
 });
@@ -121,13 +142,13 @@ app.post("/register", (req, res) => {
   //Registration Error Handling
   //Empty input => error
   if (req.body.email == '' || req.body.password == '') {
-    res.status(400).send('email or password is empty!')
+    res.status(400).send('Email or password is empty!')
   }
   // email already exists in DB
   else if (req.body.email != '') {
     for (let k in users) {
     if (users[k].email === req.body.email) {
-      res.status(400).send('email already used')
+      res.status(400).send('Email already used')
       }
     };
 
@@ -142,7 +163,7 @@ app.post("/register", (req, res) => {
     //update userDB appending the new user
     users[userId] = user;
     //set cookie user_id
-    res.cookie("userId", userId);
+    res.cookie("userId", user);
     //redirect
     let link = "/urls";
     res.redirect(link);
