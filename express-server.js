@@ -15,12 +15,12 @@ const urlDatabase = {
   "b2xVn2": {
     id : "b2xVn2",
     longURL: "http://www.lighthouselabs.ca",
-    userId: 123123
+    userId: "123123"
   },
   "9sm5xK": {
     id : "9sm5xK",
     longURL: "http://www.google.com",
-    userId: 123456
+    userId: "123456"
   }
 };
 
@@ -59,6 +59,16 @@ function userLookup(email) {
   };
 };
 
+function getUserURL(userID) {
+  var userURLs = {}
+  for (obj in urlDatabase) {
+    if (urlDatabase[obj].userId === userID)
+      {
+      userURLs[obj] = urlDatabase[obj]
+    }
+  }
+  return userURLs;
+}
 
 //GET Requests
 
@@ -92,10 +102,12 @@ app.get("/urls.json", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
+  let userId = req.cookies["user_id"].id
+  let userURL = getUserURL(userId);
   let templateVars = {
-    urls: urlDatabase,
+    urls: userURL,
     user_id: req.cookies["user_id"]
- };
+  };
   res.render("urls_index", templateVars);
 });
 
