@@ -102,15 +102,19 @@ app.get("/urls.json", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  let userId = req.cookies["user_id"].id
-  let userURL = getUserURL(userId);
-  let templateVars = {
-    urls: userURL,
-    user_id: req.cookies["user_id"]
-  };
-  res.render("urls_index", templateVars);
+  if (req.cookies["user_id"] === undefined) {
+      res.status(401).send('User Unauthorized')
+  }
+  else {
+    let userId = req.cookies["user_id"].id
+    let userURL = getUserURL(userId);
+    let templateVars = {
+      urls: userURL,
+      user_id: req.cookies["user_id"]
+    }
+    res.render("urls_index", templateVars);
+  }
 });
-
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
@@ -137,11 +141,12 @@ app.get("/urls/:id", (req, res) => {
 
 
 app.get("/u/:shortURL", (req, res) => {
-  if (urlDatabase[req.params.shortURL] === undefined) {
+  let shortLink = urlDatabase[req.params.shortURL]
+  if (shortLink.id === undefined) {
     res.status(404).send('Not Found!')
   }
   else {
-    let longURL = urlDatabase[req.params.shortURL]
+    let longURL = shortLink.longURL
   res.redirect(longURL);
   }
 });
@@ -176,7 +181,7 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   // clear the cookie name email
   res.clearCookie("user_id");
-  let link = "/urls";
+  let link = "/login";
   res.redirect(link);
 });
 
