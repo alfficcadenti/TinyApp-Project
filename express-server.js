@@ -1,6 +1,9 @@
-var express = require("express");
-var cookieParser = require('cookie-parser')
+const express = require("express");
+const cookieParser = require('cookie-parser')
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt');
+
+
 
 var app = express();
 
@@ -159,20 +162,20 @@ app.post("/login", (req, res) => {
   var passwordInput = req.body.password;
   //check user exist
   var user = userLookup(emailInput)
-  //console.log(user)
+  console.log(user)
   if (!user) {
     res.status(403).send('Email Not Found!')
   }
   else {
     //check password is correct
-    if (user.password != passwordInput) {
-      res.status(403).send('Password Incorrect!')
-    }
-    else {
+    if (bcrypt.compareSync(passwordInput, user.password)) {
       // set the cookie user_id
       res.cookie("user_id", user);
       let link = "/";
       res.redirect(link);
+    }
+    else {
+      res.status(403).send('Password Incorrect!')
     }
   }
 });
@@ -198,14 +201,15 @@ app.post("/register", (req, res) => {
       res.status(400).send('Email already used')
       }
     }
-
+    const password = req.body.password
+    const hashedPassword = bcrypt.hashSync(password, 10);
     //generate random id
     let userId = generateRandomString();
     // generate the object for the user to append to userDB
     let user = {
     id: userId,
     email: req.body.email,
-    password: req.body.password
+    password: hashedPassword
     }
     //update userDB appending the new user
     users[userId] = user;
