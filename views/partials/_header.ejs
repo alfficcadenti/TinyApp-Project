@@ -1,17 +1,20 @@
 
 
-  <div id="wrapper" class="topcorner">
+  <div id="wrapper">
+    <div id="username-display">
       <% if (user_id !== undefined) { %>
         Email: <%= user_id.email  %>
-        </div>
-        <div id="logout-button">
-          <form action="/logout" method="POST">
-            <input type="submit" value="Logout">
-          </form>
-        </div>
+    </div>
+    <div id="logout-button">
+      <form action="/logout" method="POST">
+        <input class="button" type="submit" value="Logout">
+      </form>
+    </div>
       <% } else {  %>
+    <div>
         <a href='/login'>Login</a>
 
         <a href='/register'>Register New User</a>
       <% } %>
+    </div>
   </div>

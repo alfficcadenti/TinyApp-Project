@@ -1,37 +1,45 @@
-body {
-  font-size:20px;
-  /*color: #444;*/
+body{
+    font-family:DejaVu Serif, Georgia, Arial, Helvetica, Sans-serif,serif;
+    font-size:18px;
+    color:#454140;
+    background:#e0e2e4;
 }
 
-table {
-  padding:20px;
+h1 {
+    font-size:50px;
+    color:#3b3a30;
 }
 
-td {
-  padding:20px;
+h3 {
+    font-size:22px;
 }
 
-input {
-  font-size:20px;
+a, .button, .button-text{
+    background-color: #87bdd8;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-family: "DejaVu Serif";
+    display: inline-block;
+    border-radius: 3px;
+    color: black;
+    padding: 1em 1.5em;
+    border: none;
+    text-decoration: none;
+    text-transform: uppercase;
 }
-/*
+
+.button-text {
+    background-color: #f0f0f0;
+}
+
+a:hover, .button:hover{
+    background-color: Crimson;
+}
+
 #wrapper {
-    width: 150px;
-    border: 1px solid black;
-    overflow: hidden;
+    margin: 50px;
 }
 
-#user-login {
-    width: 100px;
-    float:left;
+#username-display, #logout-button {
+    margin: 10px;
 }
-
-#login-button {
-    overflow: hidden;
-}
-
-.topcorner {
-  position:absolute;
-  top:0;
-  right:0;
-}*/

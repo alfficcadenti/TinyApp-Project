@@ -1,14 +1,16 @@
 <% include ./partials/_headtag %>
+<% include ./partials/_header %>
 
 
-    <form action="/register" method="POST" style="margin:150px;">
+ <h2>Register</h2>
+    <form action="/register" method="POST" style="margin:50px;">
       <label for="email">Email address:</label>
-      <input id="email" type="email" name="email" placeholder="Your email" style="width: 300px">
+      <input class="button-text" id="email" type="email" name="email" placeholder="email address" style="width: 300px">
       <br>
-      <label for="password">password:</label>
-      <input id="password" type="password" name="password" placeholder="password" style="width: 300px">
+      <label for="password">Password:</label>
+      <input class="button-text" id="password" type="password" name="password" placeholder="password" style="width: 300px">
       <br>
-      <input type="submit" value="Submit">
+      <input class="button" type="submit" value="Register">
     </form>
   </body>
 </html>

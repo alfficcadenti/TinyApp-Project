@@ -5,14 +5,14 @@
     <% for(key in urls) { %>
         <tr>
           <td>
-            <em><%= key %> &rarr; <%= urls[key].longURL %></em>
+            <em><b><%= key %> &rarr; </b> <%= urls[key].longURL %></em>
           </td>
           <td>
-            <a href='/urls/<%= key %>'>Edit URL</a>
+            <a class="button" href='/urls/<%= key %>'>Edit URL</a>
           </td>
           <td>
             <form method="POST" action="/urls/<%= key %>/delete">
-              <input type="submit" value="Delete">
+              <input class="button" type="submit" value="Delete">
             </form>
           </td>
         </tr>
