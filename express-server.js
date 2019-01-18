@@ -1,5 +1,4 @@
 const express = require("express");
-//const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
@@ -9,7 +8,6 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
-//app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
 app.use(cookieSession({
   name: 'session',
@@ -67,11 +65,11 @@ function userLookup(email) {
 
 //get the list of URLs for the userId
 function getUserURL(userID) {
-  var userURLs = {}
+  var userURLs = {};
   for (obj in urlDatabase) {
     if (urlDatabase[obj].userId === userID)
       {
-      userURLs[obj] = urlDatabase[obj]
+      userURLs[obj] = urlDatabase[obj];
     }
   }
   return userURLs;
@@ -129,7 +127,7 @@ app.get("/urls", (req, res) => {
     res.render("urls_index", templateVars);
   }
   else {
-    res.status(401).send("You are not logged in. <a href='/login'>Login</a>")
+    res.status(401).send("You are not logged in. <a href='/login'>Login</a>");
   }
 });
 
@@ -149,10 +147,10 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let shortLink = urlDatabase[req.params.id]
   if (shortLink === undefined) {
-    res.status(404).send('Not Found!')
+    res.status(404).send('Not Found!');
   }
   else if (getURLOwner(shortLink.id) != req.session.user_id.id) {
-    res.status(400).send('you are not the URL owner!')
+    res.status(400).send('you are not the URL owner!');
   }
 
   let templateVars = {
@@ -166,11 +164,11 @@ app.get("/urls/:id", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   let shortLink = urlDatabase[req.params.shortURL]
   if (shortLink === undefined) {
-    res.status(404).send('Not Found!')
+    res.status(404).send('Not Found!');
   }
   else {
-    let longURL = shortLink.longURL
-  res.redirect(longURL);
+    let longURL = shortLink.longURL;
+    res.redirect(longURL);
   }
 });
 
@@ -182,9 +180,9 @@ app.post("/login", (req, res) => {
   var emailInput = req.body.email;
   var passwordInput = req.body.password;
   //check if user exist
-  var user = userLookup(emailInput)
+  var user = userLookup(emailInput);
   if (!user) {
-    res.status(403).send('Email Not Found!')
+    res.status(403).send('Email Not Found!');
   }
   else {
     //check if password is correct
@@ -195,14 +193,14 @@ app.post("/login", (req, res) => {
       res.redirect(link);
     }
     else {
-      res.status(403).send('Password Incorrect!')
+      res.status(403).send('Password Incorrect!');
     }
   }
 });
 
 // clear the cookie name email
 app.post("/logout", (req, res) => {
-  req.session = null
+  req.session = null;
   let link = "/urls";
   res.redirect(link);
 });
@@ -211,13 +209,13 @@ app.post("/register", (req, res) => {
   //Registration Error Handling
   //Empty input => error
   if (req.body.email == '' || req.body.password == '') {
-    res.status(400).send('Email or password is empty!')
+    res.status(400).send('Email or password is empty!');
   }
   // email already exists in DB
   else if (req.body.email != '') {
     for (let k in users) {
     if (users[k].email === req.body.email) {
-      res.status(400).send('Email already used')
+      res.status(400).send('Email already used');
       }
     }
     const password = req.body.password
@@ -263,7 +261,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
   let shortURL = req.params.id;
   if (req.session.user_id.id != urlDatabase[shortURL].userId) {
-    res.status(400).send('you are not the URL owner!')
+    res.status(400).send('you are not the URL owner!');
   }
   else {
     delete urlDatabase[shortURL];
@@ -287,7 +285,7 @@ app.post("/urls/:id/", (req, res) => {
   } else if (isLogged(req) === false) {
     res.status(401).send("User Unauthorized");
   } else if (req.session.user_id.id != urlDatabase[shortURL].userId) {
-    res.status(400).send('you are not the URL owner!')
+    res.status(400).send('you are not the URL owner!');
   }
 
 });
