@@ -28,16 +28,6 @@ const urlDatabase = {
 };
 
 const users = {
-  "123123": {
-    id: "123123",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
- "123456": {
-    id: "123456",
-    email: "alf@gmail.com",
-    password: "a"
-  }
 }
 
 app.set("view engine", "ejs")
@@ -73,17 +63,20 @@ function getUserURL(userID) {
   return userURLs;
 }
 
+function getURLOwner (shortURL) {
+  return urlDatabase[shortURL].userId;
+}
+
 //GET Requests
 
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
-});
-
-
-app.get("/hello", (req, res) => {
-  let templateVars = { greeting: 'Hello World!' };
-  res.render("hello_world", templateVars);
+  if (req.cookies["user_id"] === undefined) {
+    res.redirect("/login");
+  }
+  else {
+    res.redirect("/urls");
+  }
 });
 
 app.get("/register", (req, res) => {
@@ -135,6 +128,15 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
+  let shortLink = urlDatabase[req.params.id]
+  if (shortLink === undefined) {
+    res.status(404).send('Not Found!')
+  }
+  else if (getURLOwner(shortLink.id) != req.cookies["user_id"].id) {
+    console.log(req.cookies["user_id"].id)
+    console.log(getURLOwner(shortLink.id))
+  }
+
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].longURL,
@@ -162,7 +164,6 @@ app.post("/login", (req, res) => {
   var passwordInput = req.body.password;
   //check user exist
   var user = userLookup(emailInput)
-  console.log(user)
   if (!user) {
     res.status(403).send('Email Not Found!')
   }
@@ -229,7 +230,6 @@ app.post("/urls", (req, res) => {
     longURL: req.body.longURL,
     userId: userObj.id
   }
-  //console.log(urlDatabase[newId])
   let newLink = "/urls/" + newId;
   let templateVars = { shortURL: newId, longURL: req.body.longURL};
   res.redirect(newLink);
