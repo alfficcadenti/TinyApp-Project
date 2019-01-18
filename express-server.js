@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require('cookie-parser')
+const cookieSession = require('cookie-session')
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 
@@ -12,7 +13,13 @@ var PORT = 8080; // default port 8080
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser())
 app.use(express.static(__dirname + '/public'));
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key 1'],
 
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
 
 const urlDatabase = {
   "b2xVn2": {
@@ -71,7 +78,7 @@ function getURLOwner (shortURL) {
 
 
 app.get("/", (req, res) => {
-  if (req.cookies["user_id"] === undefined) {
+  if (req.session.user_id === undefined) {
     res.redirect("/login");
   }
   else {
@@ -86,7 +93,7 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    user_id: req.cookies["user_id"]
+    user_id: req.session.user_id
  };
   res.render("login", templateVars);
 });
@@ -98,15 +105,15 @@ app.get("/urls.json", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  if (req.cookies["user_id"] === undefined) {
+  if (req.session.user_id === undefined) {
       res.status(401).send('User Unauthorized')
   }
   else {
-    let userId = req.cookies["user_id"].id
+    let userId = req.session.user_id.id
     let userURL = getUserURL(userId);
     let templateVars = {
       urls: userURL,
-      user_id: req.cookies["user_id"]
+      user_id: req.session.user_id
     }
     res.render("urls_index", templateVars);
   }
@@ -114,10 +121,10 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    user_id: req.cookies["user_id"]
+    user_id: req.session.user_id
   };
   //if not logged in return to login page
-  if (req.cookies["user_id"] === undefined) {
+  if (req.session.user_id === undefined) {
     res.redirect("/login");
   }
   else {
@@ -132,15 +139,15 @@ app.get("/urls/:id", (req, res) => {
   if (shortLink === undefined) {
     res.status(404).send('Not Found!')
   }
-  else if (getURLOwner(shortLink.id) != req.cookies["user_id"].id) {
-    console.log(req.cookies["user_id"].id)
+  else if (getURLOwner(shortLink.id) != req.session.user_id.id) {
+    console.log(req.session.user_id.id)
     console.log(getURLOwner(shortLink.id))
   }
 
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].longURL,
-    user_id: req.cookies["user_id"]};
+    user_id: req.session.user_id};
   res.render("urls_show", templateVars);
 });
 
@@ -171,7 +178,7 @@ app.post("/login", (req, res) => {
     //check password is correct
     if (bcrypt.compareSync(passwordInput, user.password)) {
       // set the cookie user_id
-      res.cookie("user_id", user);
+      req.session.user_id = user;
       let link = "/";
       res.redirect(link);
     }
@@ -184,7 +191,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   // clear the cookie name email
-  res.clearCookie("user_id");
+  req.session = null
   let link = "/login";
   res.redirect(link);
 });
@@ -215,7 +222,7 @@ app.post("/register", (req, res) => {
     //update userDB appending the new user
     users[userId] = user;
     //set cookie user_id
-    res.cookie("user_id", user);
+    req.session.user_id = user;
     //redirect
     let link = "/urls";
     res.redirect(link);
@@ -224,7 +231,7 @@ app.post("/register", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let newId = generateRandomString();
-  let userObj = req.cookies["user_id"]
+  let userObj = req.session.user_id
   urlDatabase[newId] = {
     id: newId,
     longURL: req.body.longURL,
@@ -240,7 +247,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
   let shortURL = req.params.id;
   //only URL owner can update
-  if (req.cookies["user_id"].id != urlDatabase[shortURL].userId) {
+  if (req.session.user_id.id != urlDatabase[shortURL].userId) {
     res.status(400).send('you are not the URL owner!')
   }
   else {
@@ -254,11 +261,11 @@ app.post("/urls/:id/update", (req, res) => {
   let shortURL = req.params.id;
   let link = "/urls/"+shortURL;
   let longURL = req.body.longURL;
-  let userObj = req.cookies["user_id"]
-  console.log(req.cookies["user_id"].id,urlDatabase[shortURL].userId)
+  let userObj = req.session.user_id
+  console.log(req.session.user_id.id,urlDatabase[shortURL].userId)
 
   //only URL owner can update
-  if (req.cookies["user_id"].id != urlDatabase[shortURL].userId) {
+  if (req.session.user_id.id != urlDatabase[shortURL].userId) {
     res.status(400).send('you are not the URL owner!')
   }
   else {
