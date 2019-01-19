@@ -11,7 +11,7 @@
             <a class="button" href='/urls/<%= key %>'>Edit URL</a>
           </td>
           <td>
-            <form method="POST" action="/urls/<%= key %>/delete">
+            <form method="POST" action="/urls/<%= key %>?_method=DELETE">
               <input class="button" type="submit" value="Delete">
             </form>
           </td>

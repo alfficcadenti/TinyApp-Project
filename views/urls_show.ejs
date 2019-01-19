@@ -2,7 +2,7 @@
 <% include ./partials/_header %>
 
 
-  <form action="/urls/<%= shortURL %>/" method="POST">
+  <form action="/urls/<%= shortURL %>?_method=put" method="POST">
       <h5>Short URL:  <%= shortURL %> </h5>
 
       <label for="longURL">Edit the URL:</label>
