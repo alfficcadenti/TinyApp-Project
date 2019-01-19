@@ -6,18 +6,18 @@
     <div id="login-wrapper" class="topcorner">
       <div id="user-login">
       <% if (user_id === undefined) { %>
-        <form action="/login" method="POST" style="margin:50px;">
+        <form action="/login" method="POST">
           <label for="email">Email address:</label>
-          <input class="button-text" type="email" name="email" placeholder="email address" style="width: 300px">
+          <input class="button-text" type="email" name="email" placeholder="email address">
           <br>
           <label for="password">Password:</label>
-          <input class="button-text" id="password" type="password" name="password" placeholder="password" style="width: 300px">
+          <input class="button-text" id="password" type="password" name="password" placeholder="password">
           <br>
           <input class="button" type="submit" value="Login">
         </form>
           <div name="div-email">
       <% } else {  %>
-          Email: <%= user_id.email  %>
+          <h3>Email: <%= user_id.email  %></h3>
         </div>
         <div id="logout-button">
           <form action="/logout" method="POST">

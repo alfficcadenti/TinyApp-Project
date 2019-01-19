@@ -1,28 +1,40 @@
 body{
     font-family:DejaVu Serif, Georgia, Arial, Helvetica, Sans-serif,serif;
-    font-size:18px;
+    font-size:2vw;
     color:#454140;
     background:#e0e2e4;
+    text-align: center;
 }
 
 h1 {
-    font-size:50px;
+    font-size:8vw;
     color:#3b3a30;
 }
 
 h3 {
-    font-size:22px;
+    font-size:6vw;
+}
+
+h5 {
+    font-size:3vw;
+}
+
+table {
+    margin-bottom: 1vw;
+    margin-top: 1vw;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 a, .button, .button-text{
     background-color: #87bdd8;
     box-sizing: border-box;
-    font-size: 12px;
+    font-size: 2vw;
     font-family: "DejaVu Serif";
     display: inline-block;
-    border-radius: 3px;
+    border-radius: 0.1vw;
     color: black;
-    padding: 1em 1.5em;
+    padding: 1em 1em;
     border: none;
     text-decoration: none;
     text-transform: uppercase;
@@ -30,6 +42,7 @@ a, .button, .button-text{
 
 .button-text {
     background-color: #f0f0f0;
+    font-size: 2vw;
 }
 
 a:hover, .button:hover{
@@ -37,9 +50,9 @@ a:hover, .button:hover{
 }
 
 #wrapper {
-    margin: 50px;
+    margin: 1vw;
 }
 
 #username-display, #logout-button {
-    margin: 10px;
+    margin: 1vw;
 }
