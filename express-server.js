@@ -43,14 +43,14 @@ const urlVisits = {
   "b2xVn2": {
     timestamp : "1547933494441",
     longURL: "http://www.lighthouselabs.ca",
-    userId: "123123",
-    shortURL: "b2xVn2"
+    shortURL: "b2xVn2",
+    userId: "123123"
   },
   "9sm5xK": {
     timestamp : "1547933494441",
     longURL: "http://www.google.com",
-    userId: "123456",
-    shortURL: "9sm5xK"
+    shortURL: "9sm5xK",
+    userId: "123456"
   }
 };
 
@@ -105,12 +105,15 @@ function getUrlVisits (shortURL) {
   //create the function to retrieve the list of visits to display in the EDIT page
 }
 
-function trackURLVisit (shortURL,userId) {
+function trackURLVisit (shortURL,longURL,userId) {
   //add a record in the urlVisits database each time a u/shortURL is opened
   let timestamp = Date.now();
-  timestamp = timeConverter(timestamp)
-  //urlVisits = shortURL : {userId,timestamp}
-  console.log(shortURL,userId,timestamp)
+  urlVisits[shortURL] = {
+      timestamp: timestamp,
+      longURL: longURL,
+      shortURL: shortURL,
+      userId: userId
+    }
 }
 
 function timeConverter(UNIX_timestamp){
@@ -216,7 +219,7 @@ app.get("/u/:shortURL", (req, res) => {
     res.status(404).send('Not Found!');
   }
   else {
-    trackURLVisit(shortURL,userId);
+    trackURLVisit(shortURL,longURL,userId);
     res.redirect(longURL);
   }
 });
