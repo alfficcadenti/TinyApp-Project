@@ -39,10 +39,25 @@ const urlDatabase = {
 
 const users = {};
 
+const urlVisits = {
+  "b2xVn2": {
+    timestamp : "1547933494441",
+    longURL: "http://www.lighthouselabs.ca",
+    userId: "123123",
+    shortURL: "b2xVn2"
+  },
+  "9sm5xK": {
+    timestamp : "1547933494441",
+    longURL: "http://www.google.com",
+    userId: "123456",
+    shortURL: "9sm5xK"
+  }
+};
 
 
 
-/// Generic Utils Functions
+
+/// Helper Functions
 //  -----------------------
 
 // is user logged in
@@ -84,6 +99,31 @@ function getUserURL(userID) {
 //get the owner of a specific shortURL
 function getURLOwner (shortURL) {
   return urlDatabase[shortURL].userId;
+}
+
+function getUrlVisits (shortURL) {
+  //create the function to retrieve the list of visits to display in the EDIT page
+}
+
+function trackURLVisit (shortURL,userId) {
+  //add a record in the urlVisits database each time a u/shortURL is opened
+  let timestamp = Date.now();
+  timestamp = timeConverter(timestamp)
+  //urlVisits = shortURL : {userId,timestamp}
+  console.log(shortURL,userId,timestamp)
+}
+
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return time;
 }
 
 
@@ -168,12 +208,15 @@ app.get("/urls/:id", (req, res) => {
 
 
 app.get("/u/:shortURL", (req, res) => {
-  let shortLink = urlDatabase[req.params.shortURL]
+  let shortLink = urlDatabase[req.params.shortURL];
+  let shortURL = req.params.shortURL;
+  let userId = req.session.user_id.id;
+  let longURL = shortLink.longURL;
   if (shortLink === undefined) {
     res.status(404).send('Not Found!');
   }
   else {
-    let longURL = shortLink.longURL;
+    trackURLVisit(shortURL,userId);
     res.redirect(longURL);
   }
 });
