@@ -2,10 +2,22 @@
 <% include ./partials/_header %>
 
   <table>
+    <th>Short URL</th>
+    <th>Website</th>
+    <th>Visits</th>
+    <th></th>
+    <th></th>
+
     <% for(key in urls) { %>
         <tr>
           <td>
-            <em><b><%= key %> &rarr; </b> <%= urls[key].longURL %></em>
+            <em><b><%= key %> &rarr; </b></em>
+          </td>
+          <td>
+            <em><%= urls[key].longURL %></em>
+          </td>
+          <td>
+            <em><b><%= urls[key].visits %></em>
           </td>
           <td>
             <a class="button" href='/urls/<%= key %>'>Edit URL</a>

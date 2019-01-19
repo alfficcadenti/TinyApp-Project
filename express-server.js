@@ -37,16 +37,21 @@ const urlDatabase = {
   }
 };
 
-const users = {};
+const users = {
+    userId : { id: "123456",
+    email: "a@a.it",
+    password: ""
+    },
+};
 
 const urlVisits = {
-  "b2xVn2": {
+   1: {
     timestamp : "1547933494441",
     longURL: "http://www.lighthouselabs.ca",
     shortURL: "b2xVn2",
     userId: "123123"
   },
-  "9sm5xK": {
+  2: {
     timestamp : "1547933494441",
     longURL: "http://www.google.com",
     shortURL: "9sm5xK",
@@ -91,24 +96,43 @@ function getUserURL(userID) {
     if (urlDatabase[obj].userId === userID)
       {
       userURLs[obj] = urlDatabase[obj];
+      userURLs[obj].visits = countVisits(userURLs[obj].id);
     }
   }
+  console.log(userURLs)
   return userURLs;
 }
+
+
 
 //get the owner of a specific shortURL
 function getURLOwner (shortURL) {
   return urlDatabase[shortURL].userId;
 }
 
-function getUrlVisits (shortURL) {
+function getURLvisitRecords(shortURL) {
   //create the function to retrieve the list of visits to display in the EDIT page
+  let stats = {};
+  for (let i in urlVisits) {
+    if (urlVisits[i].shortURL == shortURL) {
+      stats[i] = urlVisits[i];
+    }
+  }
+  //console.log(stats)
+  return stats;
+}
+
+function countVisits(shortURL) {
+  let stats = getURLvisitRecords(shortURL);
+  let count = Object.keys(stats).length;
+  return count;
 }
 
 function trackURLVisit (shortURL,longURL,userId) {
   //add a record in the urlVisits database each time a u/shortURL is opened
-  let timestamp = Date.now();
-  urlVisits[shortURL] = {
+  let visitID = Object.keys(urlVisits).length + 1;
+  let timestamp = timeConverter(Date.now());
+  urlVisits[visitID] = {
       timestamp: timestamp,
       longURL: longURL,
       shortURL: shortURL,
@@ -202,10 +226,14 @@ app.get("/urls/:id", (req, res) => {
     res.status(400).send('you are not the URL owner!');
   }
 
+  // get url visits stats
+  let stats = getURLvisitRecords(req.params.id);
+  console.log(stats);
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].longURL,
-    user_id: req.session.user_id};
+    user_id: req.session.user_id,
+    stats: stats};
   res.render("urls_show", templateVars);
 });
 
