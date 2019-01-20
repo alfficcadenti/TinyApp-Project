@@ -18,7 +18,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(cookieSession({
   name: 'session',
   keys: ['key 1'],
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  maxAge: 30 * 24 * 60 * 60 * 1000 // 24 hours
 }))
 
 
@@ -49,13 +49,15 @@ const urlVisits = {
     timestamp : "1547933494441",
     longURL: "http://www.lighthouselabs.ca",
     shortURL: "b2xVn2",
-    userId: "123123"
+    userId: "123123",
+    unique: true
   },
   2: {
     timestamp : "1547933494441",
     longURL: "http://www.google.com",
     shortURL: "9sm5xK",
-    userId: "123456"
+    userId: "123456",
+    unique: true
   }
 };
 
@@ -67,10 +69,10 @@ const urlVisits = {
 
 // is user logged in
 function isLogged(req) {
-  if (req.session.user_id !== undefined) {
-    return true;
-  } else if (req.session.user_id !== undefined) {
+  if (req.session.user_id === undefined) {
     return false;
+  } else if (req.session.user_id !== undefined) {
+    return true;
   }
 }
 
@@ -97,9 +99,9 @@ function getUserURL(userID) {
       {
       userURLs[obj] = urlDatabase[obj];
       userURLs[obj].visits = countVisits(userURLs[obj].id);
+      userURLs[obj].unique = countUniqueVisits(userURLs[obj].id);
     }
   }
-  console.log(userURLs)
   return userURLs;
 }
 
@@ -128,20 +130,32 @@ function countVisits(shortURL) {
   return count;
 }
 
-function trackURLVisit (shortURL,longURL,userId) {
+function countUniqueVisits(shortURL) {
+  let count = 0;
+  for (let i in urlVisits) {
+    if (urlVisits[i].shortURL == shortURL && urlVisits[i].unique === true) {
+      count++
+    }
+  }
+  //console.log(stats)
+  return count;
+}
+
+function trackURLVisit (shortURL,longURL,userId,unique) {
   //add a record in the urlVisits database each time a u/shortURL is opened
   let visitID = Object.keys(urlVisits).length + 1;
-  let timestamp = timeConverter(Date.now());
+  let timestamp = timeConverter(new Date());
   urlVisits[visitID] = {
       timestamp: timestamp,
       longURL: longURL,
       shortURL: shortURL,
-      userId: userId
+      userId: userId,
+      unique: unique
     }
 }
 
 function timeConverter(UNIX_timestamp){
-  var a = new Date(UNIX_timestamp * 1000);
+  var a = UNIX_timestamp;
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var year = a.getFullYear();
   var month = months[a.getMonth()];
@@ -228,7 +242,6 @@ app.get("/urls/:id", (req, res) => {
 
   // get url visits stats
   let stats = getURLvisitRecords(req.params.id);
-  console.log(stats);
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].longURL,
@@ -240,14 +253,27 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   let shortLink = urlDatabase[req.params.shortURL];
-  let shortURL = req.params.shortURL;
-  let userId = req.session.user_id.id;
-  let longURL = shortLink.longURL;
   if (shortLink === undefined) {
     res.status(404).send('Not Found!');
   }
   else {
-    trackURLVisit(shortURL,longURL,userId);
+    let shortURL = req.params.shortURL;
+    let longURL = shortLink.longURL;
+    let uniqueTracker = false;
+    let userId = "noUser";
+    //check if no cookie
+    if (req.session.unique == '' || req.session.unique == undefined) {
+      //set uniqueTracker as true
+      uniqueTracker = true;
+      //set new cookie
+      req.session.unique = generateRandomString();
+    }
+    if (isLogged(req)) {
+      userId = req.session.user_id.id;
+    }
+    //track visit
+    trackURLVisit(shortURL,longURL,userId,uniqueTracker);
+    //redirect
     res.redirect(longURL);
   }
 });

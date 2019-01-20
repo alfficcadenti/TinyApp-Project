@@ -5,6 +5,7 @@
     <th>Short URL</th>
     <th>Website</th>
     <th>Visits</th>
+    <th>Unique Visits</th>
     <th></th>
     <th></th>
 
@@ -18,6 +19,9 @@
           </td>
           <td>
             <em><b><%= urls[key].visits %></em>
+          </td>
+          <td>
+            <em><b><%= urls[key].unique %></em>
           </td>
           <td>
             <a class="button" href='/urls/<%= key %>'>Edit URL</a>
