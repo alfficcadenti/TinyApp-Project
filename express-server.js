@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieSession = require('cookie-session');
+//const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const methodOverride = require('method-override');
@@ -232,23 +233,31 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  let shortLink = urlDatabase[req.params.id]
-  if (shortLink === undefined) {
-    res.status(404).send('Not Found!');
-  }
-  else if (getURLOwner(shortLink.id) != req.session.user_id.id) {
-    res.status(400).send('you are not the URL owner!');
-  }
+  if (isLogged(req)) {
+    let shortLink = urlDatabase[req.params.id]
+    if (shortLink === undefined) {
+      res.status(404).send('Not Found!');
+    }
+    else if (getURLOwner(shortLink.id) != req.session.user_id.id) {
+      res.status(400).send('you are not the URL owner!');
+    }
 
-  // get url visits stats
-  let stats = getURLvisitRecords(req.params.id);
-  let templateVars = {
-    shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id].longURL,
-    user_id: req.session.user_id,
-    stats: stats};
-  res.render("urls_show", templateVars);
+    // get url visits stats
+    let stats = getURLvisitRecords(req.params.id);
+    let templateVars = {
+      shortURL: req.params.id,
+      longURL: urlDatabase[req.params.id].longURL,
+      user_id: req.session.user_id,
+      stats: stats};
+    res.render("urls_show", templateVars);
+  }
+  else {
+    res.redirect("/login");
+  }
 });
+
+
+
 
 
 app.get("/u/:shortURL", (req, res) => {

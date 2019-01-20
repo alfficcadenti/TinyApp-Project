@@ -7,16 +7,16 @@ body{
 }
 
 h1 {
-    font-size:8vw;
+    font-size:6vw;
     color:#3b3a30;
 }
 
 h3 {
-    font-size:6vw;
+    font-size:5vw;
 }
 
 h5 {
-    font-size:3vw;
+    font-size:4vw;
 }
 
 table {
@@ -32,7 +32,7 @@ a, .button, .button-text{
     font-size: 2vw;
     font-family: "DejaVu Serif";
     display: inline-block;
-    border-radius: 0.1vw;
+    border-radius: 1vw;
     color: black;
     padding: 1em 1em;
     border: none;
@@ -50,9 +50,9 @@ a:hover, .button:hover{
 }
 
 #wrapper {
-    margin: 1vw;
+    margin: 5px;
 }
 
 #username-display, #logout-button {
-    margin: 1vw;
+    margin: 5px;
 }
